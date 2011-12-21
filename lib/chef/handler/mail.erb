@@ -1,0 +1,15 @@
+Results of <%= @status %> Chef run on <%= @run_status.node.fqdn %>
+
+Start time: <%= @run_status.start_time %>
+End time: <%= @run_status.end_time %>
+Elapsed time: <%= @run_status.elapsed_time %>
+
+Updated Resources:
+<% @run_status.updated_resources.each do |r| -%>
+  <%= r.to_s %>
+<% end -%>
+
+<% if @run_status.failed? -%>
+<%= @run_status.formatted_exception %>
+<%= Array(@run_status.backtrace).join("\n") %>
+<% end -%>

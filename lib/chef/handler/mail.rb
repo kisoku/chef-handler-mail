@@ -38,11 +38,11 @@ class MailHandler < Chef::Handler
     status = success? ? "Successful" : "Failed"
     subject = "#{status} Chef run on node #{node.fqdn}"
     
-    Chef::Log.info("Load template path: #{@template_path}")
+    Chef::Log.debug("mail handler template path: #{@template_path}")
     if File.exists? @template_path
       template = IO.read(@template_path).chomp
     else
-      Chef::Log.error("Could not locate template: #{@template_path}")
+      Chef::Log.error("mail handler template not found: #{@template_path}")
       raise Errno::ENOENT
     end
 

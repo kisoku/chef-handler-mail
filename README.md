@@ -5,16 +5,18 @@ generated from an Erubis template.
 
 # USAGE:
 
-  include_recipe "chef_handler"
+Using chef_handler LWRP:
 
-  gem_package "chef-handler-mail" do
-    action :nothing
-  end.run_action(:install)
-
-  chef_handler 'mail-handler' do
-    source 'chef/handler/mail'
-    args :to_address "admins@example.com"
-  end
+    include_recipe "chef_handler"
+    
+    gem_package "chef-handler-mail" do
+      action :nothing
+    end.run_action(:install)
+    
+    chef_handler 'mail-handler' do
+      source 'chef/handler/mail'
+      args :to_address "admins@example.com"
+    end
 
 # LICENSE AND AUTHOR:
 

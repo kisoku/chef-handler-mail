@@ -19,7 +19,6 @@ require 'erubis'
 require 'pony'
 
 class MailHandler < Chef::Handler
-  VERSION = '0.1'
   DEFAULT_TEMPLATE = File.join(File.dirname(__FILE__), "mail.erb")
 
   def initialize(opts = {})

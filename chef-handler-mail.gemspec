@@ -1,6 +1,11 @@
+lib = File.expand_path('../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
+
+require 'chef/handler/mail/version'
+
 Gem::Specification.new do |s|
   s.name = 'chef-handler-mail'
-  s.version = '0.1'
+  s.version = MailHandler::VERSION
   s.platform = Gem::Platform::RUBY
   s.summary = "Chef report handler that uses pony to send an email"
   s.description = s.summary

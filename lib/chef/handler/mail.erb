@@ -5,8 +5,9 @@ End time: <%= @run_status.end_time %>
 Elapsed time: <%= @run_status.elapsed_time %>
 
 Updated Resources:
+
 <% @run_status.updated_resources.each do |r| -%>
-  <%= r.to_s %>
+   <%= r.to_s %>
 <% end -%>
 
 <% if @run_status.failed? -%>

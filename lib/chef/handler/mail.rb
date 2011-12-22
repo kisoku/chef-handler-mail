@@ -19,27 +19,24 @@ require 'erubis'
 require 'pony'
 
 class MailHandler < Chef::Handler
+  attr_reader :options
   def initialize(opts = {})
-    defaults = {
+    @options = {
       :to_address => "root",
       :template_path => File.join(File.dirname(__FILE__), "mail.erb")
     }
-    opts.merge! defaults
-
-    @to_address = opts[:to_address]
-    @template_path = opts[:template_path]
+    options.merge opts
   end
 
-  
   def report
     status = success? ? "Successful" : "Failed"
     subject = "#{status} Chef run on node #{node.fqdn}"
-    
-    Chef::Log.debug("mail handler template path: #{@template_path}")
-    if File.exists? @template_path
-      template = IO.read(@template_path).chomp
+
+    Chef::Log.debug("mail handler template path: #{options[:template_path]}")
+    if File.exists? options[:template_path]
+      template = IO.read(options[:template_path]).chomp
     else
-      Chef::Log.error("mail handler template not found: #{@template_path}")
+      Chef::Log.error("mail handler template not found: #{options[:template_path]}")
       raise Errno::ENOENT
     end
 
@@ -51,7 +48,7 @@ class MailHandler < Chef::Handler
     body = Erubis::Eruby.new(template).evaluate(context)
 
     Pony.mail(
-      :to => @to_address, 
+      :to => options[:to_address],
       :from => "chef-client@#{node.fqdn}",
       :subject => subject,
       :body => body

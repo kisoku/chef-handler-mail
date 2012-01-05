@@ -6,18 +6,14 @@ Opcode wiki at http://wiki.opscode.com/display/chef/Exception+and+Report+Handler
 
 # USAGE:
 
-Using chef_handler LWRP:
+Using /etc/chef/config.rb
 
-    include_recipe "chef_handler"
-    
-    gem_package "chef-handler-mail" do
-      action :nothing
-    end.run_action(:install)
-    
-    chef_handler 'mail-handler' do
-      source 'chef/handler/mail'
-      args :to_address "admins@example.com"
-    end
+    require 'rubygems'
+    require 'chef/mail/handler'
+
+    mail_handler = MailHandler.new
+    report_handlers << mail_handler
+    exception_handlers << mail_handler
 
 # LICENSE AND AUTHOR:
 

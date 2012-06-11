@@ -9,7 +9,7 @@ Opcode wiki at http://wiki.opscode.com/display/chef/Exception+and+Report+Handler
 Using /etc/chef/config.rb
 
     require 'rubygems'
-    require 'chef/mail/handler'
+    require 'chef/handler/mail'
 
     mail_handler = MailHandler.new
     report_handlers << mail_handler

@@ -15,6 +15,18 @@ Using /etc/chef/config.rb
     report_handlers << mail_handler
     exception_handlers << mail_handler
 
+
+Using chef_handler LWRP
+
+    chef_gem "chef-handler-mail"
+    gem "chef-handler-mail"
+
+    chef_handler "MailHandler" do
+       source 'chef/handler/mail'
+       arguments :to_address => "root"
+       action :nothing
+    end.run_action(:enable)
+
 # LICENSE AND AUTHOR:
 
 Author:: Mathieu Sauve-Frankel (<msf@kisoku.net>)

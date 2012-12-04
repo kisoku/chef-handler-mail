@@ -49,9 +49,11 @@ class MailHandler < Chef::Handler
 
     Pony.mail(
       :to => options[:to_address],
-      :from => "chef-client@#{node.fqdn}",
+      :from => options[:from_address] || "chef-client@#{node.fqdn}",
       :subject => subject,
-      :body => body
+      :body => body,
+      :via => options[:via],
+      :via_options => options[:via_options] || {}
     )
   end
 end

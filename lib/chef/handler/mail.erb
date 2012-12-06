@@ -11,6 +11,6 @@ Updated Resources:
 <% end -%>
 
 <% if @run_status.failed? -%>
-<%= @run_status.formatted_exception %>
-<%= Array(@run_status.backtrace).join("\n") %>
+  <%= @run_status.formatted_exception %>
+  <%= Array(@run_status.backtrace).join("\n") %>
 <% end -%>

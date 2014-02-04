@@ -17,7 +17,6 @@ require 'chef'
 require 'chef/handler'
 require 'erubis'
 require 'pony'
-require 'yaml'
 
 class MailHandler < Chef::Handler
   attr_reader :options
@@ -67,7 +66,8 @@ class MailHandler < Chef::Handler
         :port => options[:smtp_port],
         :user_name => options[:smtp_username],
         :password => options[:smtp_password],
-        :authentiction => :login,
+        :authentication => options[:smtp_authentication],
+        :domain => options[:smtp_domain],
         :enable_starttls_auto => true
       }
     )

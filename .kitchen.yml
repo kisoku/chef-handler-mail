@@ -1,0 +1,21 @@
+---
+driver:
+  name: vagrant
+  pre_create_command: 'rake clean && rake build'
+  synced_folders: [
+    [ '/tmp/chef-handler-mail-build', '/tmp/build' ]
+  ]
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+    run_list: recipe[apt]
+
+suites:
+  - name: default
+    run_list:
+      - recipe[chef-handler-mail-test]
+      - recipe[postfix]
+    attributes:

@@ -18,10 +18,10 @@ Using /etc/chef/config.rb
 
 Using chef_handler LWRP
 
-    chef_gem "chef-handler-mail"
-    gem "chef-handler-mail"
+    chef_gem 'chef-handler-mail'
+    require 'chef/handler/mail'
 
-    chef_handler "MailHandler" do
+    chef_handler 'MailHandler' do
        source 'chef/handler/mail'
        arguments :to_address => "root"
        action :nothing

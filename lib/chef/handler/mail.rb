@@ -22,13 +22,15 @@ class MailHandler < Chef::Handler
   attr_reader :options
   def initialize(opts = {})
     @options = {
-      :to_address => "root",
-      :template_path => File.join(File.dirname(__FILE__), "mail.erb")
+      to_address: "root",
+      template_path: File.join(File.dirname(__FILE__), "mail.erb")
     }
     @options.merge! opts
   end
 
   def report
+    return nil if last_run_failed?(success?)
+
     status = success? ? "Successful" : "Failed"
     subject = "#{status} Chef run on node #{node.fqdn}"
 
@@ -41,17 +43,30 @@ class MailHandler < Chef::Handler
     end
 
     context = {
-      :status => status,
-      :run_status => run_status
+      status: status,
+      run_status: run_status
     }
 
     body = Erubis::Eruby.new(template).evaluate(context)
 
     Pony.mail(
-      :to => options[:to_address],
-      :from => "chef-client@#{node.fqdn}",
-      :subject => subject,
-      :body => body
+      to: options[:to_address],
+      from: "chef-client@#{node.fqdn}",
+      subject: subject,
+      body: body
     )
   end
+
+  def last_run_failed?(success)
+    last_run_failed_file = File.join(Chef::Config[:file_cache_path], 'chef-handler-mail.last_run_failed')
+
+    if success
+      File.delete(last_run_failed_file) if File.exists?(last_run_failed_file)
+      false
+    else
+      File.open(last_run_failed_file, "w") {}
+      true
+    end
+  end
+
 end

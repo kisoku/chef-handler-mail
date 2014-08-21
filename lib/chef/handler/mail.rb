@@ -22,8 +22,8 @@ class MailHandler < Chef::Handler
   attr_reader :options
   def initialize(opts = {})
     @options = {
-      to_address: "root",
-      template_path: File.join(File.dirname(__FILE__), "mail.erb")
+      :to_address => "root",
+      :template_path => File.join(File.dirname(__FILE__), "mail.erb")
     }
     @options.merge! opts
   end
@@ -43,17 +43,17 @@ class MailHandler < Chef::Handler
     end
 
     context = {
-      status: status,
-      run_status: run_status
+      :status => status,
+      :run_status => run_status
     }
 
     body = Erubis::Eruby.new(template).evaluate(context)
 
     Pony.mail(
-      to: options[:to_address],
-      from: "chef-client@#{node.fqdn}",
-      subject: subject,
-      body: body
+      :to => options[:to_address],
+      :from => "chef-client@#{node.fqdn}",
+      :subject => subject,
+      :body => body
     )
   end
 

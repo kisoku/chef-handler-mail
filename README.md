@@ -27,6 +27,11 @@ Using chef_handler LWRP
        action :nothing
     end.run_action(:enable)
 
+You may also specify the Pony from, via, and via_options parameters through arguments:
+* :from (defaults to 'chef-client@#{node.fqdn}')
+* :via (:sendmail or :smtp, sendmail is defaul)
+* :via_options (Options passed to given mailer)
+
 # LICENSE AND AUTHOR:
 
 Author:: Mathieu Sauve-Frankel (<msf@kisoku.net>)

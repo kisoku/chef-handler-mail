@@ -30,7 +30,13 @@ class MailHandler < Chef::Handler
 
   def report
     status = success? ? "Successful" : "Failed"
-    subject = "#{status} Chef run on node #{node.fqdn}"
+
+    if node.attribute?(:fqdn)
+      subject = "#{status} Chef run on node #{node.fqdn}"
+    else
+      subject = "#{status} Chef run on node #{node.ipaddress} (Ohai has failed to set FQDN)"
+      Chef::Log.debug("Ohai has not set fqdn for this node, using ipaddress for the subject instead")
+    end
 
     Chef::Log.debug("mail handler template path: #{options[:template_path]}")
     if File.exists? options[:template_path]

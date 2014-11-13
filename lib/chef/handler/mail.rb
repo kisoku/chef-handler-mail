@@ -23,14 +23,22 @@ class MailHandler < Chef::Handler
   def initialize(opts = {})
     @options = {
       :to_address => "root",
-      :template_path => File.join(File.dirname(__FILE__), "mail.erb")
+      :template_path => File.join(File.dirname(__FILE__), "mail.erb"),
+      :from_address => "chef-client",
+      :smtp_host => "localhost",
+      :smtp_port => '25',
+      :smtp_username => "chef-client",
+      :smtp_password => "",
+      :smtp_authentication => :plain,
+      :smtp_domain => 'localhost.localdomain'
     }
     @options.merge! opts
+    puts @options.to_yaml
   end
 
   def report
     status = success? ? "Successful" : "Failed"
-    subject = "#{status} Chef run on node #{node.fqdn}"
+    subject = "#{status} Chef run on node #{node.name}"
 
     Chef::Log.debug("mail handler template path: #{options[:template_path]}")
     if File.exists? options[:template_path]
@@ -44,14 +52,24 @@ class MailHandler < Chef::Handler
       :status => status,
       :run_status => run_status
     }
-
+    
     body = Erubis::Eruby.new(template).evaluate(context)
 
     Pony.mail(
       :to => options[:to_address],
-      :from => "chef-client@#{node.fqdn}",
+      :from => options[:from_address],
       :subject => subject,
-      :body => body
+      :body => body,
+      :via => :smtp,
+      :via_options => {
+        :address => options[:smtp_host],
+        :port => options[:smtp_port],
+        :user_name => options[:smtp_username],
+        :password => options[:smtp_password],
+        :authentication => options[:smtp_authentication],
+        :domain => options[:smtp_domain],
+        :enable_starttls_auto => true
+      }
     )
   end
 end

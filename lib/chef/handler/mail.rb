@@ -23,6 +23,7 @@ class MailHandler < Chef::Handler
   def initialize(opts = {})
     @options = {
       :to_address => "root",
+      :send_statuses => ["Successful", "Failed"],
       :template_path => File.join(File.dirname(__FILE__), "mail.erb")
     }
     @options.merge! opts
@@ -30,28 +31,31 @@ class MailHandler < Chef::Handler
 
   def report
     status = success? ? "Successful" : "Failed"
-    subject = "#{status} Chef run on node #{node.fqdn}"
+    if options[:send_statuses].include? status
+      subject = "#{status} Chef run on node #{node.fqdn}"
+        options[:from_address] ? from_address = options[:from_address] : from_address = "chef-client@#{node.fqdn}"
 
-    Chef::Log.debug("mail handler template path: #{options[:template_path]}")
-    if File.exists? options[:template_path]
-      template = IO.read(options[:template_path]).chomp
-    else
-      Chef::Log.error("mail handler template not found: #{options[:template_path]}")
-      raise Errno::ENOENT
+      Chef::Log.debug("mail handler template path: #{options[:template_path]}")
+      if File.exists? options[:template_path]
+        template = IO.read(options[:template_path]).chomp
+      else
+        Chef::Log.error("mail handler template not found: #{options[:template_path]}")
+        raise Errno::ENOENT
+      end
+
+      context = {
+        :status => status,
+        :run_status => run_status
+      }
+
+      body = Erubis::Eruby.new(template).evaluate(context)
+
+      Pony.mail(
+        :to => options[:to_address],
+          :from => from_address,
+        :subject => subject,
+        :body => body
+      )
     end
-
-    context = {
-      :status => status,
-      :run_status => run_status
-    }
-
-    body = Erubis::Eruby.new(template).evaluate(context)
-
-    Pony.mail(
-      :to => options[:to_address],
-      :from => "chef-client@#{node.fqdn}",
-      :subject => subject,
-      :body => body
-    )
   end
 end

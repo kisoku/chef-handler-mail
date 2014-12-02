@@ -29,6 +29,8 @@ class MailHandler < Chef::Handler
   end
 
   def report
+    return nil if last_run_failed?(success?)
+
     status = success? ? "Successful" : "Failed"
     subject = "#{status} Chef run on node #{node.fqdn}"
 
@@ -54,4 +56,17 @@ class MailHandler < Chef::Handler
       :body => body
     )
   end
+
+  def last_run_failed?(success)
+    last_run_failed_file = File.join(Chef::Config[:file_cache_path], 'chef-handler-mail.last_run_failed')
+
+    if success
+      File.delete(last_run_failed_file) if File.exists?(last_run_failed_file)
+      false
+    else
+      File.open(last_run_failed_file, "w") {}
+      true
+    end
+  end
+
 end

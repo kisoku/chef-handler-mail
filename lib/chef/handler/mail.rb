@@ -17,12 +17,14 @@ require 'chef'
 require 'chef/handler'
 require 'erubis'
 require 'pony'
+require 'socket'
 
 class MailHandler < Chef::Handler
   attr_reader :options
   def initialize(opts = {})
     @options = {
       :to_address => "root",
+      :from_address => "chef-client@#{Socket.gethostname}",
       :template_path => File.join(File.dirname(__FILE__), "mail.erb")
     }
     @options.merge! opts
@@ -49,7 +51,7 @@ class MailHandler < Chef::Handler
 
     Pony.mail(
       :to => options[:to_address],
-      :from => "chef-client@#{node.fqdn}",
+      :from => options[:from_address],
       :subject => subject,
       :body => body
     )

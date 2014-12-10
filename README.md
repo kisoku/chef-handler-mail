@@ -2,7 +2,7 @@
 
 A simple chef report handler that uses the Pony gem to send email reports
 generated from an Erubis template. Inspired by the example handler on the
-Opcode wiki at http://wiki.opscode.com/display/chef/Exception+and+Report+Handlers
+Opcode wiki at http://docs.getchef.com/handlers.html#run-from-client-rb
 
 # USAGE:
 

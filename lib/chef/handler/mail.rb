@@ -23,6 +23,7 @@ class MailHandler < Chef::Handler
   def initialize(opts = {})
     @options = {
       :to_address => "root",
+      :from_address => "chef-client@#{node.fqdn}",
       :template_path => File.join(File.dirname(__FILE__), "mail.erb")
     }
     @options.merge! opts
@@ -49,7 +50,7 @@ class MailHandler < Chef::Handler
 
     Pony.mail(
       :to => options[:to_address],
-      :from => "chef-client@#{node.fqdn}",
+      :from => options[:from_address],
       :subject => subject,
       :body => body
     )

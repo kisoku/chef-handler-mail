@@ -25,7 +25,7 @@ class MailHandler < Chef::Handler
       :to_address => "root",
       :template_path => File.join(File.dirname(__FILE__), "mail.erb")
     }
-    @options.merge! opts
+    @options.merge! Hash[opts.map{ |k, v| [k.to_sym, v] }]
   end
 
   def report

@@ -1,4 +1,4 @@
-Results of <%= @status %> Chef run on <%= @run_status.node.fqdn %>
+Results of <%= @status %> Chef run on <%= @run_status.node['fqdn'] %>
 
 Start time: <%= @run_status.start_time %>
 End time: <%= @run_status.end_time %>
